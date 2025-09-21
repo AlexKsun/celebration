@@ -221,7 +221,7 @@ DISCORD_WEBHOOK_URL: 'https://discord.com/api/webhooks/...'
 
 ### 環境変数による設定
 
-`.env` ファイル（開発環境）または GitHub Environment Variables（本番環境）で以下の設定を調整できます。
+`.env` ファイル（開発環境）または GitHub Environment Secrets（本番環境）で以下の設定を調整できます。
 
 - `ENABLE_CONSOLE_LOG`: `true` に設定すると、詳細なコンソールログが出力されます。開発・デバッグ時に便利です。（デフォルト: 開発環境のみ `true`）
 - `ENABLE_DISCORD_NOTIFICATION`: `false` に設定すると、Discordへの通知が無効になります。（デフォルト: `true`）
