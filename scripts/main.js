@@ -683,8 +683,8 @@ class WeddingGiftCatalog {
                 } : null
             });
 
-            // TODO: Google Apps Scriptに送信
-            await this.sendToGAS(submitData);
+            // Google Apps Scriptにフォールバック対応で送信
+            await this.sendToGASWithFallback(submitData);
 
             // 提出済みとしてマーク
             this.storage.markAsSubmitted(this.selectedProduct, this.selectedVariant, product);
@@ -706,9 +706,14 @@ class WeddingGiftCatalog {
         }
     }
 
-    // Google Apps Scriptに送信
+    // Google Apps Scriptに送信（フォールバック対応）
     async sendToGAS(data) {
-        console.log('=== GAS送信開始 ===');
+        return await this.sendToGASWithFallback(data);
+    }
+
+    // フォールバック対応でGASに送信
+    async sendToGASWithFallback(data) {
+        console.log('=== GAS送信開始（フォールバック対応） ===');
 
         const config = window.weddingGiftConfig;
 
@@ -761,50 +766,63 @@ class WeddingGiftCatalog {
     // フォーム送信でGASにデータを送信
     async sendToGASViaForm(gasUrl, data) {
         return new Promise((resolve, reject) => {
-            // フォーム要素を取得
-            const form = document.getElementById('gasSubmissionForm');
-            const dataInput = document.getElementById('gasFormData');
-            const iframe = document.querySelector('iframe[name="gasSubmissionFrame"]');
-
-            if (!form || !dataInput) {
-                reject(new Error('送信フォームが見つかりません'));
-                return;
-            }
-
-            // iframeのエラーを完全に無視する設定
-            if (iframe) {
-                // すべてのエラーイベントを無視
-                iframe.onerror = (e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    console.log('📝 iframe エラー無視');
-                    return false;
-                };
-
-                // コンソールエラーも抑制
-                iframe.onload = () => {
-                    try {
-                        // iframe内のエラーを抑制
-                        iframe.contentWindow.onerror = () => false;
-                        iframe.contentWindow.addEventListener('error', (e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            return false;
-                        }, true);
-                    } catch (e) {
-                        // クロスオリジンエラーも無視
-                    }
-                };
-            }
-
-            // フォームのアクションURLを設定
+            // フォームとiframeを動的に作成
+            const form = document.createElement('form');
+            form.style.display = 'none';
+            form.method = 'GET';
+            form.target = 'gasSubmissionFrame';
             form.action = gasUrl;
 
-            // データをJSON文字列として設定
+            const actionInput = document.createElement('input');
+            actionInput.type = 'hidden';
+            actionInput.name = 'action';
+            actionInput.value = 'submit';
+
+            const dataInput = document.createElement('input');
+            dataInput.type = 'hidden';
+            dataInput.name = 'data';
             dataInput.value = JSON.stringify(data);
+
+            form.appendChild(actionInput);
+            form.appendChild(dataInput);
+
+            const iframe = document.createElement('iframe');
+            iframe.name = 'gasSubmissionFrame';
+            iframe.style.display = 'none';
+            iframe.style.width = '0';
+            iframe.style.height = '0';
+            iframe.style.border = 'none';
+            iframe.src = 'about:blank';
+
+            document.body.appendChild(form);
+            document.body.appendChild(iframe);
+
+            // iframeのエラーを完全に無視する設定
+            iframe.onerror = (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                console.log('📝 iframe エラー無視');
+                return false;
+            };
+
+            // コンソールエラーも抑制
+            iframe.onload = () => {
+                try {
+                    // iframe内のエラーを抑制
+                    iframe.contentWindow.onerror = () => false;
+                    iframe.contentWindow.addEventListener('error', (e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        return false;
+                    }, true);
+                } catch (e) {
+                    // クロスオリジンエラーも無視
+                }
+            };
 
             console.log('📡 フォーム送信URL:', gasUrl);
             console.log('📦 送信データ:', data);
+            console.log('📋 GET送信に変更 - doGetで処理されます');
 
             // フォームを送信
             try {
@@ -813,10 +831,20 @@ class WeddingGiftCatalog {
 
                 // フォーム送信は成功として扱う
                 setTimeout(() => {
+                    // 使用後にフォームとiframeを削除
+                    document.body.removeChild(form);
+                    document.body.removeChild(iframe);
                     resolve({ success: true, message: 'フォーム送信が完了しました' });
                 }, 500);
             } catch (error) {
                 console.warn('⚠️ フォーム送信エラー（無視）:', error);
+                // エラー時も要素を削除
+                try {
+                    document.body.removeChild(form);
+                    document.body.removeChild(iframe);
+                } catch (cleanupError) {
+                    console.warn('📝 クリーンアップエラー（無視）:', cleanupError);
+                }
                 resolve({ success: true, message: 'フォーム送信が完了しました' });
             }
         });
