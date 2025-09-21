@@ -1,0 +1,91 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+# GitHub Pages デプロイに必要な権限
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同時実行制御
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Replace environment variables
+      run: |
+        echo "環境変数を置換中..."
+
+        # HTMLファイル内の環境変数プレースホルダーを置換
+        sed -i "s|{{GAS_URL}}|${{ vars.GAS_URL }}|g" index.html
+
+        # 置換結果を確認（セキュリティのため一部をマスク）
+        echo "GAS_URL置換完了: $(echo '${{ vars.GAS_URL }}' | sed 's/\(.\{10\}\).*/\1.../')"
+      env:
+        GAS_URL: ${{ vars.GAS_URL }}
+
+    - name: Remove development files for production
+      run: |
+        echo "本番環境用のクリーンアップ中..."
+
+        # 開発用ファイルを削除
+        rm -f .env .env.example
+
+        # 管理者ツールを削除
+        sed -i '/<script src="scripts\/admin.js"><\/script>/d' index.html
+
+        # .env ローダーのフォールバック処理を無効化（本番では環境変数のみ使用）
+        sed -i 's/await this.loadFromEnvFile();/\/\/ await this.loadFromEnvFile(); \/\/ Disabled in production/g' scripts/env-loader.js
+
+    - name: Validate configuration
+      run: |
+        echo "設定を検証中..."
+
+        # 必要な環境変数が設定されているかチェック
+        if [ -z "${{ vars.GAS_URL }}" ]; then
+          echo "❌ エラー: GAS_URL が設定されていません"
+          echo "GitHub Pages の Environment variables で GAS_URL を設定してください"
+          exit 1
+        fi
+
+        # GAS URLの形式をチェック
+        if [[ ! "${{ vars.GAS_URL }}" =~ ^https://script\.google\.com/macros/s/.*/exec$ ]]; then
+          echo "❌ エラー: GAS_URL の形式が正しくありません"
+          echo "正しい形式: https://script.google.com/macros/s/SCRIPT_ID/exec"
+          exit 1
+        fi
+
+        echo "✅ 設定検証完了"
+
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: '.'
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
+
+    - name: Deployment summary
+      run: |
+        echo "🚀 デプロイ完了!"
+        echo "サイトURL: ${{ steps.deployment.outputs.page_url }}"
+        echo "Environment: github-pages"

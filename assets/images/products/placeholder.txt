@@ -1,0 +1,18 @@
+このフォルダには商品画像を配置してください。
+
+必要な画像ファイル:
+- pot_white_1.webp (BALMUDA The Pot - ホワイト)
+- pot_black_1.webp (BALMUDA The Pot - ブラック)
+- bruno_red.webp (BRUNO Grill - レッド)
+- bruno_white.webp (BRUNO Grill - ホワイト)
+- diffuser_white.webp (MUJI Aroma Diffuser - ホワイト)
+- towel_blue.webp (今治タオルセット - ブルー)
+- towel_pink.webp (今治タオルセット - ピンク)
+- cups_gold.webp (ペアマグカップ - ゴールド)
+- cups_silver.webp (ペアマグカップ - シルバー)
+- dinner_experience.webp (高級レストランディナー)
+
+推奨サイズ: 400x300px (4:3比率)
+推奨フォーマット: WebP, PNG, JPG
+
+画像が見つからない場合は、CSSで設定されたプレースホルダー（🎁）が表示されます。

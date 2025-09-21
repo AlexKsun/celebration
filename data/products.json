@@ -1,0 +1,126 @@
+{
+  "products": [
+    {
+      "id": "balmuda_pot",
+      "name": "The Pot",
+      "brand": "BALMUDA",
+      "category": "kitchen",
+      "specs": "W269×H128×D170mm / 0.6L / 1200W",
+      "description": "美しいフォルムの電気ケトル",
+      "variants": [
+        {
+          "id": "white",
+          "name": "ホワイト",
+          "color": "#ffffff",
+          "images": [
+            "https://store.balmuda.com/static/item/484/desktop.jpg"
+          ],
+          "price": "12,100円",
+          "available": true
+        },
+        {
+          "id": "black",
+          "name": "ブラック",
+          "color": "#333333",
+          "images": [
+            "https://store.balmuda.com/static/item/482/desktop.jpg"
+          ],
+          "price": "12,100円",
+          "available": true
+        }
+      ],
+      "defaultVariant": "white",
+      "productUrl": "https://www.balmuda.com/jp/pot/"
+    },
+    {
+      "id": "bruno_grill",
+      "name": "Grill sandwich maker",
+      "brand": "BRUNO",
+      "category": "kitchen",
+      "specs": "W285×H145×D240mm / 約3kg / 900W",
+      "description": "おしゃれなホットサンドメーカー",
+      "variants": [
+        {
+          "id": "red",
+          "name": "レッド",
+          "color": "#cc3333",
+          "images": ["https://bruno-onlineshop.com/client_info/IDEA/itemimage/07760823/07760823_sku_6074e2826b0ea.jpg"],
+          "available": true
+        },
+        {
+          "id": "white",
+          "name": "グレージュ",
+          "color": "#c3bcb2",
+          "images": ["https://file.idea-in.jp/images/img_5x6/product/550/07760822_sku_6074e23be250a.jpg"],
+          "available": true
+        }
+      ],
+      "defaultVariant": "red",
+      "productUrl": "https://bruno-onlineshop.com/item/07760823.html"
+    },
+    {
+      "id": "aroma_diffuser",
+      "name": "Aroma Diffuser",
+      "brand": "MUJI",
+      "category": "living",
+      "specs": "φ168×H121mm / 約6時間連続使用",
+      "description": "シンプルで美しいアロマディフューザー",
+      "variants": [
+        {
+          "id": "white",
+          "name": "ホワイト",
+          "color": "#ffffff",
+          "images": ["https://www.muji.com/public/media/img/item/4550344554586_org.jpg?im=Resize,width=1260"],
+          "available": true
+        }
+      ],
+      "defaultVariant": "white",
+      "productUrl": "https://www.muji.com/jp/ja/store/cmdty/detail/4550344554586"
+    },
+    {
+      "id": "towel_set",
+      "name": "今治タオルセット",
+      "brand": "今治タオル",
+      "category": "bath",
+      "specs": "バスタオル×2、フェイスタオル×2",
+      "description": "高品質な今治タオルのペアセット",
+      "variants": [
+        {
+          "id": "white",
+          "name": "ホワイト",
+          "color": "#ffffff",
+          "images": ["https://imabarikinsei.itembox.design/product/005/000000000553/000000000553-01-l.jpg?t=20250820123103"],
+          "available": true
+        }
+      ],
+      "defaultVariant": "white",
+      "productUrl": "https://www.imabari-kinsei.com/c/series/organic/066IOG3910000008"
+    },
+    {
+      "id": "pair_mug",
+      "name": "CUP BOX",
+      "brand": "Moheim",
+      "category": "pair",
+      "specs": "容量：350ml×2個",
+      "description": "新婚生活にぴったりのペアセット",
+      "variants": [
+        {
+          "id": "sand_white_gray",
+          "name": "サンドホワイト&グレー",
+          "color": "#ebdccd",
+          "images": ["https://asset.hyacca.online/wp-content/uploads/2022/05/10230143/425d23d81ec7b8887007d56d4bd0e47b-1.jpg"],
+          "available": true
+        },
+        {
+          "id": "sand_white_lightblue",
+          "name": "サンドホワイト&ライトブルー",
+          "color": "#bcc6be",
+          "images": ["https://asset.hyacca.online/wp-content/uploads/2022/05/04222041/dbe9e2383cb162c545d9055492f86b1a1.jpg"],
+          "available": true
+        }
+      ],
+      "defaultVariant": "sand_white_gray",
+      "productUrl": "https://hyacca.online/products/35018/?kikaku-id=0"
+    }
+  ]
+}
