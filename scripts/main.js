@@ -756,16 +756,30 @@ class WeddingGiftCatalog {
                 cache: 'no-cache'
             };
 
-            console.log('📋 リクエスト詳細:', requestOptions);
+            console.log('📋 リクエスト詳細:', {
+                method: requestOptions.method,
+                headers: requestOptions.headers,
+                body: requestOptions.body ? JSON.parse(requestOptions.body) : null, // JSON文字列をパースして表示
+                mode: requestOptions.mode,
+                credentials: requestOptions.credentials,
+                cache: requestOptions.cache
+            });
 
             // CORS回避: まずOPTIONSでプリフライト確認
             try {
+                console.log('🚀 プリフライトリクエスト送信中...');
                 const preflightResponse = await fetch(GAS_URL, {
                     method: 'OPTIONS',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     mode: 'cors'
+                });
+                console.log('📨 プリフライトレスポンス受信:', {
+                    status: preflightResponse.status,
+                    statusText: preflightResponse.statusText,
+                    ok: preflightResponse.ok,
+                    headers: Object.fromEntries(preflightResponse.headers.entries())
                 });
                 console.log('✓ プリフライト確認完了:', preflightResponse.status);
             } catch (preflightError) {
