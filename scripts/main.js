@@ -783,7 +783,11 @@ class WeddingGiftCatalog {
 
             if (!response.ok) {
                 const errorText = await response.text();
-                console.error('❌ HTTP エラー詳細:', errorText);
+                console.error('❌ HTTP エラー詳細:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    responseText: errorText
+                });
                 throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
             }
 
@@ -811,7 +815,8 @@ class WeddingGiftCatalog {
             console.error('💥 GAS送信エラー詳細:', {
                 name: error.name,
                 message: error.message,
-                stack: error.stack
+                stack: error.stack,
+                errorObject: error // エラーオブジェクト全体も出力
             });
 
             // CORSエラーの場合、フォールバック送信を試行
@@ -827,7 +832,12 @@ class WeddingGiftCatalog {
                         throw new Error('フォールバック機能が利用できません');
                     }
                 } catch (fallbackError) {
-                    console.error('💥 フォールバック送信も失敗:', fallbackError);
+                    console.error('💥 フォールバック送信も失敗:', {
+                        name: fallbackError.name,
+                        message: fallbackError.message,
+                        stack: fallbackError.stack,
+                        errorObject: fallbackError // エラーオブジェクト全体も出力
+                    });
                     throw new Error(`通常送信・フォールバック送信ともに失敗しました。\n通常送信エラー: ${error.message}\nフォールバックエラー: ${fallbackError.message}`);
                 }
             }
@@ -964,8 +974,12 @@ class WeddingGiftCatalog {
                 }
 
             } catch (fetchError) {
-                console.warn('⚠️ 申し込み状況確認でネットワークエラー:', fetchError.message);
-                console.warn('エラー詳細:', fetchError);
+                console.warn('⚠️ 申し込み状況確認でネットワークエラー:', {
+                    message: fetchError.message,
+                    name: fetchError.name,
+                    stack: fetchError.stack,
+                    errorObject: fetchError // エラーオブジェクト全体も出力
+                });
                 // ネットワークエラーの場合は通常の新規申し込みUIで進行
                 this.hasExistingApplication = false;
                 this.existingApplicationData = null;
