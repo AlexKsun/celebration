@@ -70,6 +70,13 @@
             <div class="products-grid" id="productsGrid">
                 <!-- Products will be dynamically loaded here -->
             </div>
+            <!-- Products Loading Overlay -->
+            <div class="products-loading-overlay show" id="productsLoadingOverlay">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>商品を読み込み中...</p>
+                </div>
+            </div>
         </section>
     </main>
 
@@ -116,11 +123,11 @@
     </div>
 
 
-    <!-- Loading Overlay -->
-    <div class="loading-overlay show" id="loadingOverlay"> <!-- 初期表示のために'show'クラスを追加 -->
+    <!-- Loading Overlay (for form submissions) -->
+    <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner">
             <div class="spinner"></div>
-            <p>読み込み中...</p> <!-- テキストを「読み込み中...」に変更 -->
+            <p>送信中...</p>
         </div>
     </div>
 

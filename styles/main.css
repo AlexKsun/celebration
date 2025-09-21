@@ -706,7 +706,7 @@ h1, h2, h3 {
   color: var(--text-color);
 }
 
-/* Loading Overlay */
+/* Loading Overlay (for form submissions) */
 .loading-overlay {
   position: fixed;
   top: 0;
@@ -726,6 +726,33 @@ h1, h2, h3 {
 .loading-overlay.show {
   opacity: 1;
   visibility: visible;
+}
+
+/* Products Loading Overlay */
+.products-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition);
+  border-radius: var(--border-radius);
+}
+
+.products-loading-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.products-section {
+  position: relative;
 }
 
 .loading-spinner {

@@ -40,11 +40,11 @@ class WeddingGiftCatalog {
             // 初期化完了後に再度フッター表示を確認
             setTimeout(() => this.ensureFooterDisplay(), 100);
             console.log('🎉 カタログ初期化完了');
-            this.hideLoading(document.getElementById('loadingOverlay')); // 初期ロード完了後にローディングを非表示
+            this.hideLoading(document.getElementById('productsLoadingOverlay')); // 商品読み込み完了後にローディングを非表示
         } catch (error) {
             console.error('初期化エラー:', error);
             this.showError('商品データの読み込みに失敗しました。');
-            this.hideLoading(document.getElementById('loadingOverlay')); // エラー時もローディングを非表示
+            this.hideLoading(document.getElementById('productsLoadingOverlay')); // エラー時もローディングを非表示
         }
     }
 
