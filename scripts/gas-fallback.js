@@ -68,47 +68,7 @@ async function sendToGASViaGet(gasUrl, data) {
     }
 }
 
-// JSONP風の送信（古いブラウザ対応）
-async function sendToGASViaJsonp(gasUrl, data) {
-    console.log('🔄 JSONP風送信を試行...');
-
-    return new Promise((resolve, reject) => {
-        // GETパラメータとしてデータを送信
-        const params = new URLSearchParams();
-        params.append('data', JSON.stringify(data));
-        params.append('callback', 'handleGASResponse_' + Date.now());
-
-        const callbackName = params.get('callback');
-        const url = `${gasUrl}?${params.toString()}`;
-
-        // グローバルコールバック関数を設定
-        window[callbackName] = function(response) {
-            delete window[callbackName];
-            document.head.removeChild(script);
-            resolve(response);
-        };
-
-        // スクリプトタグで送信
-        const script = document.createElement('script');
-        script.src = url;
-        script.onerror = () => {
-            delete window[callbackName];
-            document.head.removeChild(script);
-            reject(new Error('JSONP送信に失敗しました'));
-        };
-
-        document.head.appendChild(script);
-
-        // タイムアウト設定
-        setTimeout(() => {
-            if (window[callbackName]) {
-                delete window[callbackName];
-                document.head.removeChild(script);
-                reject(new Error('JSONP送信がタイムアウトしました'));
-            }
-        }, 10000);
-    });
-}
+// JSONP送信は削除（CORS問題のため）
 
 // プロキシサーバー経由での送信
 async function sendToGASViaProxy(gasUrl, data) {
@@ -153,10 +113,6 @@ async function sendToGASWithFallback(gasUrl, data) {
         {
             name: 'GET送信',
             func: () => sendToGASViaGet(gasUrl, data)
-        },
-        {
-            name: 'JSONP送信',
-            func: () => sendToGASViaJsonp(gasUrl, data)
         },
         {
             name: 'フォーム送信',

@@ -873,62 +873,10 @@ class WeddingGiftCatalog {
                 return;
             }
 
-            // 状況確認リクエスト
-            const url = `${GAS_URL}?action=status&t=${Date.now()}`;
-            console.log('📡 リクエストURL:', url);
-
-            try {
-                console.log('🚀 状況確認リクエスト送信中...');
-                const response = await fetch(url, {
-                    method: 'GET',
-                    mode: 'cors',
-                    cache: 'no-cache'
-                });
-
-                console.log('📨 レスポンス受信:', {
-                    status: response.status,
-                    statusText: response.statusText,
-                    ok: response.ok
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-
-                const responseText = await response.text();
-                console.log('📄 生レスポンス:', responseText);
-
-                let result;
-                try {
-                    result = JSON.parse(responseText);
-                } catch (parseError) {
-                    console.error('❌ JSON パースエラー:', parseError);
-                    console.log('パース対象:', responseText);
-                    throw new Error(`レスポンスの解析に失敗: ${parseError.message}`);
-                }
-
-                console.log('📋 パース済み申し込み状況レスポンス:', JSON.stringify(result, null, 2));
-
-                if (result.success) {
-                    console.log('✅ 申し込み状況取得成功');
-                    this.handleApplicationStatus(result);
-                } else {
-                    console.warn('⚠️ 申し込み状況取得でエラー:', result.error);
-                    this.hasExistingApplication = false;
-                    this.existingApplicationData = null;
-                }
-
-            } catch (fetchError) {
-                console.warn('⚠️ 申し込み状況確認でネットワークエラー:', {
-                    message: fetchError.message,
-                    name: fetchError.name,
-                    stack: fetchError.stack,
-                    errorObject: fetchError // エラーオブジェクト全体も出力
-                });
-                // ネットワークエラーの場合は通常の新規申し込みUIで進行
-                this.hasExistingApplication = false;
-                this.existingApplicationData = null;
-            }
+            // CORS問題を避けるため、申し込み状況確認は無効化
+            console.log('📝 CORS問題回避のため申し込み状況確認をスキップし、新規申し込みとして処理します');
+            this.hasExistingApplication = false;
+            this.existingApplicationData = null;
 
         } catch (error) {
             console.error('❌ 申し込み状況確認エラー:', error);
