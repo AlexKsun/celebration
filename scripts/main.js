@@ -719,6 +719,17 @@ class WeddingGiftCatalog {
             </div>
         `;
 
+        // モーダルの送信ボタンを初期状態にリセット
+        const submitBtn = document.getElementById('submitBtn');
+        if (submitBtn) {
+            submitBtn.classList.remove('loading');
+            submitBtn.innerHTML = `
+                <span class="material-icons">check_circle</span>
+                決定する
+            `;
+            submitBtn.disabled = false;
+        }
+
         this.showModal(document.getElementById('confirmModal'));
     }
 
@@ -784,6 +795,17 @@ class WeddingGiftCatalog {
             this.existingApplicationData = submitData; // 送信したデータを既存申し込みデータとして設定
 
             this.hideLoading(loadingOverlay);
+
+            // ボタンの状態を正常に復旧
+            if (submitBtn) {
+                submitBtn.classList.remove('loading');
+                submitBtn.innerHTML = `
+                    <span class="material-icons">check_circle</span>
+                    決定する
+                `;
+                submitBtn.disabled = false;
+            }
+
             this.hideModal(document.getElementById('confirmModal'));
             this.showCompletionModal(isChange);
             this.updateFooter();
@@ -997,6 +1019,19 @@ class WeddingGiftCatalog {
     hideModal(modal) {
         modal.classList.remove('show');
         document.body.style.overflow = '';
+
+        // 確認モーダルが閉じられる場合、送信ボタンをリセット
+        if (modal.id === 'confirmModal') {
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) {
+                submitBtn.classList.remove('loading');
+                submitBtn.innerHTML = `
+                    <span class="material-icons">check_circle</span>
+                    決定する
+                `;
+                submitBtn.disabled = false;
+            }
+        }
     }
 
     // ローディングを表示
