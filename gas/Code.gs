@@ -374,8 +374,7 @@ function saveToSpreadsheet(data, config) {
       item.variant.name,
       item.variant.color || '',
       data.isChange ? '変更' : '新規',
-      data.timestamp || '',
-      JSON.stringify(data, null, 2)
+      data.timestamp || ''
     ];
 
     // データを追加
@@ -413,8 +412,7 @@ function createSheet(spreadsheet, config) {
     'バリエーション名',
     '色',
     '申し込み種別',
-    'フロントエンド送信時刻',
-    '生データ'
+    'フロントエンド送信時刻'
   ];
 
   sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
@@ -423,7 +421,6 @@ function createSheet(spreadsheet, config) {
 
   // 列幅を調整
   sheet.setColumnWidths(1, headers.length, 120);
-  sheet.setColumnWidth(11, 300);
 
   Logger.log('シートを作成しました: ' + config.SHEET_NAME);
 
@@ -747,10 +744,10 @@ function getApplicationStatus() {
 
     Logger.log('最新データを取得中（行: ' + lastRow + '）...');
     // 最新の申し込みを取得
-    const data = sheet.getRange(lastRow, 1, 1, 11).getValues()[0];
+    const data = sheet.getRange(lastRow, 1, 1, 10).getValues()[0];
     Logger.log('取得した生データ: ' + JSON.stringify(data));
 
-    const [timestamp, productId, productName, brand, category, variantId, variantName, color, type, frontendTimestamp, rawData] = data;
+    const [timestamp, productId, productName, brand, category, variantId, variantName, color, type, frontendTimestamp] = data;
 
     Logger.log('データ解析中...');
     Logger.log('解析対象:', {
@@ -763,23 +760,8 @@ function getApplicationStatus() {
       variantName: variantName,
       color: color,
       type: type,
-      frontendTimestamp: frontendTimestamp,
-      rawDataLength: rawData ? rawData.length : 0
+      frontendTimestamp: frontendTimestamp
     });
-
-    // 生データをパース
-    let parsedData = null;
-    try {
-      if (rawData) {
-        parsedData = JSON.parse(rawData);
-        Logger.log('✅ 生データパース成功');
-      } else {
-        Logger.log('⚠️ 生データが空です');
-      }
-    } catch (parseError) {
-      Logger.log('❌ 生データのパースに失敗: ' + parseError.toString());
-      Logger.log('パース対象データ: ' + rawData);
-    }
 
     const result = {
       hasApplication: true,
@@ -798,8 +780,7 @@ function getApplicationStatus() {
           }
         },
         type: type,
-        frontendTimestamp: frontendTimestamp,
-        rawData: parsedData
+        frontendTimestamp: frontendTimestamp
       },
       message: '申し込み履歴があります'
     };
