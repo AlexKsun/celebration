@@ -289,18 +289,53 @@ h1, h2, h3 {
   transition: var(--transition);
 }
 
+/* モザイクローディング効果 */
 .product-image.loading {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
+  background:
+    linear-gradient(45deg, transparent 25%, rgba(139, 90, 107, 0.15) 25%),
+    linear-gradient(-45deg, transparent 25%, rgba(139, 90, 107, 0.15) 25%),
+    linear-gradient(45deg, transparent 75%, rgba(139, 90, 107, 0.15) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(139, 90, 107, 0.15) 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  animation: mosaicShimmer 3s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
 }
 
-@keyframes shimmer {
+.product-image.loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  animation: progressiveReveal 2.5s ease-in-out infinite;
+}
+
+@keyframes mosaicShimmer {
+  0%, 100% {
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    opacity: 0.7;
+  }
+  50% {
+    background-position: 10px 10px, 10px 20px, 20px 0px, 0px 10px;
+    opacity: 1;
+  }
+}
+
+@keyframes progressiveReveal {
   0% {
-    background-position: -200% 0;
+    left: -100%;
   }
   100% {
-    background-position: 200% 0;
+    left: 100%;
   }
 }
 
@@ -456,20 +491,84 @@ h1, h2, h3 {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  margin-top: auto; /* カードの下部に配置 */
+  margin-top: auto;
+  position: relative;
+  overflow: hidden;
 }
 
 .select-button:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-medium);
+  background: linear-gradient(135deg, #9d6b7d 0%, #b8839a 100%);
 }
 
 .select-button.selected {
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  background: linear-gradient(135deg, #2c5f2d 0%, #4a7c59 100%);
+  box-shadow: 0 0 0 2px rgba(44, 95, 45, 0.3), var(--shadow-medium);
+  position: relative;
+}
+
+.select-button.selected::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 70%
+  );
+  animation: selectedShine 2s ease-in-out infinite;
+}
+
+@keyframes selectedShine {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* ボタンローディング状態 */
+.select-button.loading {
+  cursor: wait;
+  pointer-events: none;
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+  opacity: 0.8;
+}
+
+.select-button.loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: buttonShimmer 1.5s ease-in-out infinite;
+}
+
+.select-button.loading .material-icons {
+  animation: spin 1s linear infinite;
 }
 
 .select-button .material-icons {
   font-size: 1.2rem;
+}
+
+@keyframes buttonShimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* Footer Selection */
@@ -534,7 +633,7 @@ h1, h2, h3 {
 }
 
 .decide-button {
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+  background: linear-gradient(135deg, var(--accent-color) 0%, #a67284 100%) !important;
   color: #ffffff !important;
   border: none !important;
   border-radius: 15px !important;
@@ -552,6 +651,8 @@ h1, h2, h3 {
   height: 50px !important;
   visibility: visible !important;
   opacity: 1 !important;
+  position: relative !important;
+  overflow: hidden !important;
 }
 
 .decide-button:disabled {
@@ -565,9 +666,38 @@ h1, h2, h3 {
   opacity: 0.6;
 }
 
+/* 決定ボタンローディング状態 */
+.decide-button.loading {
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
+  cursor: wait !important;
+  pointer-events: none !important;
+  opacity: 0.8 !important;
+}
+
+.decide-button.loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: buttonShimmer 1.2s ease-in-out infinite;
+}
+
+.decide-button.loading .material-icons {
+  animation: spin 1s linear infinite;
+}
+
 .decide-button:not(:disabled):hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-medium);
+  background: linear-gradient(135deg, #9d6b7d 0%, #b8839a 100%) !important;
 }
 
 .decide-button .material-icons {
@@ -750,6 +880,112 @@ h1, h2, h3 {
 .products-section {
   position: relative;
   min-height: 400px;
+}
+
+/* スケルトンローディング */
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  animation: skeletonFadeIn 0.3s ease;
+}
+
+.skeleton-card {
+  background: var(--white);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-light);
+  animation: skeletonPulse 2s ease-in-out infinite;
+}
+
+.skeleton-image {
+  height: 250px;
+  background: linear-gradient(
+    90deg,
+    var(--primary-color) 25%,
+    var(--secondary-color) 50%,
+    var(--primary-color) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 2s ease-in-out infinite;
+}
+
+.skeleton-content {
+  padding: 1.5rem;
+}
+
+.skeleton-line {
+  height: 1rem;
+  background: linear-gradient(
+    90deg,
+    var(--primary-color) 25%,
+    var(--secondary-color) 50%,
+    var(--primary-color) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 2s ease-in-out infinite;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+}
+
+.skeleton-line.title {
+  height: 1.3rem;
+  width: 80%;
+}
+
+.skeleton-line.brand {
+  height: 0.9rem;
+  width: 60%;
+}
+
+.skeleton-line.description {
+  height: 1rem;
+  width: 100%;
+}
+
+.skeleton-line.description:last-of-type {
+  width: 70%;
+}
+
+.skeleton-button {
+  height: 3rem;
+  background: linear-gradient(
+    90deg,
+    var(--primary-color) 25%,
+    var(--secondary-color) 50%,
+    var(--primary-color) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 2s ease-in-out infinite;
+  border-radius: 15px;
+  margin-top: 1rem;
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes skeletonPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes skeletonFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .loading-spinner {

@@ -22,29 +22,47 @@ class WeddingGiftCatalog {
             await this.storage.init?.() || Promise.resolve();
             await window.weddingGiftConfig.init();
 
-            // 申し込み状況を確認
-            await this.checkApplicationStatus();
-
+            // 商品データを優先的に読み込み、すぐに表示
             console.log('📦 商品データ読み込み中...');
             await this.loadProducts();
             console.log('✅ 商品データ読み込み完了');
 
+            // 商品を即座に表示
             this.setupEventListeners();
-            this.restoreSelection();
             console.log('🎨 商品描画を呼び出し中...');
             this.renderProducts();
             console.log('✅ 商品描画呼び出し完了');
-            this.updateFooter();
-            this.adjustBodyPadding(); // フッターの高さに合わせてbodyのpadding-bottomを調整
+            this.adjustBodyPadding();
+
+            // GAS通信中はボタンをローディング状態に
+            this.setButtonsLoadingState(true, 'ステータス確認中...');
+
+            // GAS通信は非同期で実行し、結果が返ってきたら状態を更新
+            console.log('📊 ステータス確認を非同期実行中...');
+            this.checkApplicationStatus()
+                .then(() => {
+                    console.log('✅ ステータス確認完了 - UIを更新');
+                    this.restoreSelection();
+                    this.updateFooter();
+                    this.updateProductSelection();
+                    this.setButtonsLoadingState(false);
+                })
+                .catch((error) => {
+                    console.warn('⚠️ ステータス確認は失敗しましたが、商品表示は正常です:', error);
+                    // ローカルストレージから選択状態を復元
+                    this.restoreSelection();
+                    this.updateFooter();
+                    this.setButtonsLoadingState(false);
+                });
 
             // 初期化完了後に再度フッター表示を確認
             setTimeout(() => this.ensureFooterDisplay(), 100);
             console.log('🎉 カタログ初期化完了');
-            this.hideLoading(document.getElementById('productsLoadingOverlay')); // 商品読み込み完了後にローディングを非表示
+            this.hideLoading(document.getElementById('productsLoadingOverlay'));
         } catch (error) {
             console.error('初期化エラー:', error);
             this.showError('商品データの読み込みに失敗しました。');
-            this.hideLoading(document.getElementById('productsLoadingOverlay')); // エラー時もローディングを非表示
+            this.hideLoading(document.getElementById('productsLoadingOverlay'));
         }
     }
 
@@ -93,16 +111,64 @@ class WeddingGiftCatalog {
     // 商品データを読み込み
     async loadProducts() {
         try {
+            // スケルトンローディングを表示
+            this.showSkeletonLoading();
+
             const response = await fetch('./data/products.json');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
             this.products = data.products;
+
+            // スケルトンローディングを非表示
+            this.hideSkeletonLoading();
         } catch (error) {
             console.error('商品データ読み込みエラー:', error);
+            this.hideSkeletonLoading();
             throw error;
         }
+    }
+
+    // スケルトンローディングを表示
+    showSkeletonLoading() {
+        const grid = document.getElementById('productsGrid');
+        if (!grid) return;
+
+        // スケルトンカードを作成
+        const skeletonCards = Array.from({ length: 6 }, () => this.createSkeletonCard());
+
+        grid.innerHTML = '';
+        grid.className = 'skeleton-grid';
+
+        skeletonCards.forEach(card => grid.appendChild(card));
+    }
+
+    // スケルトンローディングを非表示
+    hideSkeletonLoading() {
+        const grid = document.getElementById('productsGrid');
+        if (!grid) return;
+
+        grid.className = 'products-grid';
+    }
+
+    // スケルトンカードを作成
+    createSkeletonCard() {
+        const card = document.createElement('div');
+        card.className = 'skeleton-card';
+
+        card.innerHTML = `
+            <div class="skeleton-image"></div>
+            <div class="skeleton-content">
+                <div class="skeleton-line title"></div>
+                <div class="skeleton-line brand"></div>
+                <div class="skeleton-line description"></div>
+                <div class="skeleton-line description"></div>
+                <div class="skeleton-button"></div>
+            </div>
+        `;
+
+        return card;
     }
 
     // イベントリスナーを設定
@@ -117,7 +183,10 @@ class WeddingGiftCatalog {
         // 決定ボタン
         const decideButton = document.getElementById('decideButton');
         decideButton.addEventListener('click', () => {
-            this.showConfirmModal();
+            // ローディング中でなければモーダル表示
+            if (!decideButton.classList.contains('loading')) {
+                this.showConfirmModal();
+            }
         });
 
         // ウィンドウのリサイズイベント
@@ -278,7 +347,10 @@ class WeddingGiftCatalog {
         const selectButton = card.querySelector('.select-button');
         selectButton.addEventListener('click', (e) => {
             e.stopPropagation();
-            this.selectProduct(product.id);
+            // ローディング中でなければ選択処理を実行
+            if (!selectButton.classList.contains('loading')) {
+                this.selectProduct(product.id);
+            }
         });
 
         // バリエーション選択のイベント
@@ -653,6 +725,18 @@ class WeddingGiftCatalog {
     // 選択を送信
     async submitSelection() {
         const loadingOverlay = document.getElementById('loadingOverlay');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // ボタンをローディング状態に
+        if (submitBtn) {
+            submitBtn.classList.add('loading');
+            submitBtn.innerHTML = `
+                <span class="material-icons">sync</span>
+                送信中...
+            `;
+            submitBtn.disabled = true;
+        }
+
         this.showLoading(loadingOverlay);
 
         try {
@@ -708,6 +792,17 @@ class WeddingGiftCatalog {
         } catch (error) {
             console.error('送信エラー:', error);
             this.hideLoading(loadingOverlay);
+
+            // ボタンの状態を復旧
+            if (submitBtn) {
+                submitBtn.classList.remove('loading');
+                submitBtn.innerHTML = `
+                    <span class="material-icons">check_circle</span>
+                    決定する
+                `;
+                submitBtn.disabled = false;
+            }
+
             this.showError('送信に失敗しました。もう一度お試しください。');
         }
     }
@@ -921,6 +1016,44 @@ class WeddingGiftCatalog {
     // エラーメッセージを表示
     showError(message) {
         alert(message); // 簡易実装、後でより良いUIに置き換え可能
+    }
+
+    // ボタンのローディング状態を制御
+    setButtonsLoadingState(isLoading, message = 'ローディング中...') {
+        // 商品選択ボタン
+        const selectButtons = document.querySelectorAll('.select-button');
+        selectButtons.forEach(button => {
+            if (isLoading) {
+                button.classList.add('loading');
+                button.innerHTML = `
+                    <span class="material-icons">sync</span>
+                    ${message}
+                `;
+                button.disabled = true;
+            } else {
+                button.classList.remove('loading');
+                button.disabled = false;
+                // ボタンの内容は updateProductSelection() で更新される
+            }
+        });
+
+        // 決定ボタン
+        const decideButton = document.getElementById('decideButton');
+        if (decideButton) {
+            if (isLoading) {
+                decideButton.classList.add('loading');
+                decideButton.innerHTML = `
+                    <span class="material-icons">sync</span>
+                    ${message}
+                `;
+                decideButton.disabled = true;
+            } else {
+                decideButton.classList.remove('loading');
+                // ボタンの内容と状態は updateFooter() で更新される
+            }
+        }
+
+        console.log(`🔘 ボタン状態更新: ${isLoading ? 'ローディング開始' : 'ローディング終了'}`);
     }
 
     // 申し込み状況を確認
