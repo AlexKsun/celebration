@@ -488,8 +488,7 @@ h1, h2, h3 {
   align-items: center !important;
   justify-content: space-between !important;
   gap: 2rem !important;
-  min-height: 80px !important;
-  max-height: 120px !important;
+  min-height: 80px !important; /* フッターの最小高さを維持 */
   visibility: visible !important;
   opacity: 1 !important;
 }
@@ -766,12 +765,11 @@ h1, h2, h3 {
 
   .footer-selection {
     flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
+    gap: 0.5rem; /* スマートフォンでのギャップを調整 */
+    padding: 0.8rem 1rem; /* スマートフォンでのパディングを調整 */
   }
 
   .decide-button {
-    min-width: auto;
     width: 100%;
   }
 

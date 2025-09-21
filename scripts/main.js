@@ -35,6 +35,7 @@ class WeddingGiftCatalog {
             this.renderProducts();
             console.log('✅ 商品描画呼び出し完了');
             this.updateFooter();
+            this.adjustBodyPadding(); // フッターの高さに合わせてbodyのpadding-bottomを調整
 
             // 初期化完了後に再度フッター表示を確認
             setTimeout(() => this.ensureFooterDisplay(), 100);
@@ -79,6 +80,16 @@ class WeddingGiftCatalog {
         }
     }
 
+    // bodyのpadding-bottomをフッターの高さに合わせて調整
+    adjustBodyPadding() {
+        const footer = document.getElementById('footerSelection');
+        if (footer) {
+            const footerHeight = footer.offsetHeight;
+            document.body.style.paddingBottom = `${footerHeight + 20}px`; // フッターの高さ + 少し余白
+            console.log(`📐 bodyのpadding-bottomを${footerHeight + 20}pxに調整`);
+        }
+    }
+
     // 商品データを読み込み
     async loadProducts() {
         try {
@@ -107,6 +118,11 @@ class WeddingGiftCatalog {
         const decideButton = document.getElementById('decideButton');
         decideButton.addEventListener('click', () => {
             this.showConfirmModal();
+        });
+
+        // ウィンドウのリサイズイベント
+        window.addEventListener('resize', () => {
+            this.adjustBodyPadding();
         });
 
         // モーダル関連
