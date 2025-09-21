@@ -740,130 +740,97 @@ class WeddingGiftCatalog {
             throw new Error('GAS URLが正しく設定されていません');
         }
 
-        // 実際のGAS送信処理
+        // JSONPでの送信処理
         try {
-            console.log('🚀 GASに送信中...', GAS_URL);
+            console.log('🚀 JSONPでGASに送信中...', GAS_URL);
+            const result = await this.sendToGASViaJsonp(GAS_URL, data);
+            console.log('📨 JSONPレスポンス受信:', result);
 
-            // CORSエラー回避のためのリクエスト設定
-            const requestOptions = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-                mode: 'cors',
-                credentials: 'omit',
-                cache: 'no-cache'
-            };
-
-            console.log('📋 リクエスト詳細:', {
-                method: requestOptions.method,
-                headers: requestOptions.headers,
-                body: requestOptions.body ? JSON.parse(requestOptions.body) : null, // JSON文字列をパースして表示
-                mode: requestOptions.mode,
-                credentials: requestOptions.credentials,
-                cache: requestOptions.cache
-            });
-
-            // CORS回避: まずOPTIONSでプリフライト確認
-            try {
-                console.log('🚀 プリフライトリクエスト送信中...');
-                const preflightResponse = await fetch(GAS_URL, {
-                    method: 'OPTIONS',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    mode: 'cors'
-                });
-                console.log('📨 プリフライトレスポンス受信:', {
-                    status: preflightResponse.status,
-                    statusText: preflightResponse.statusText,
-                    ok: preflightResponse.ok,
-                    headers: Object.fromEntries(preflightResponse.headers.entries())
-                });
-                console.log('✓ プリフライト確認完了:', preflightResponse.status);
-            } catch (preflightError) {
-                console.warn('⚠️ プリフライト失敗（継続します）:', preflightError.message);
+            if (!result?.success) {
+                throw new Error(result?.error || 'GAS側でエラーが発生しました');
             }
 
-            const response = await fetch(GAS_URL, requestOptions);
-
-            console.log('📨 レスポンス受信:', {
-                status: response.status,
-                statusText: response.statusText,
-                ok: response.ok,
-                headers: Object.fromEntries(response.headers.entries())
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error('❌ HTTP エラー詳細:', {
-                    status: response.status,
-                    statusText: response.statusText,
-                    responseText: errorText
-                });
-                throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
-            }
-
-            const responseText = await response.text();
-            console.log('📄 レスポンステキスト:', responseText);
-
-            let result;
-            try {
-                result = JSON.parse(responseText);
-            } catch (parseError) {
-                console.error('❌ JSON パースエラー:', parseError);
-                console.log('生レスポンス:', responseText);
-                throw new Error(`レスポンスの解析に失敗: ${parseError.message}`);
-            }
-
-            console.log('✅ GAS送信成功:', result);
-
-            if (!result.success) {
-                throw new Error(result.error || 'GAS側でエラーが発生しました');
-            }
-
+            console.log('✅ JSONP送信成功:', result);
             return result;
 
-        } catch (error) {
-            console.error('💥 GAS送信エラー詳細:', {
-                name: error.name,
-                message: error.message,
-                stack: error.stack,
-                errorObject: error // エラーオブジェクト全体も出力
+        } catch (jsonpError) {
+            console.error('💥 JSONP送信エラー詳細:', {
+                name: jsonpError.name,
+                message: jsonpError.message,
+                stack: jsonpError.stack
             });
 
-            // CORSエラーの場合、フォールバック送信を試行
-            if (error.name === 'TypeError' && (error.message.includes('fetch') || error.message.includes('CORS'))) {
-                console.log('🔄 CORSエラーのためフォールバック送信を試行...');
+            if (window.sendToGASWithFallback) {
+                console.log('🔄 JSONP失敗のためフォールバック送信を試行します...');
 
                 try {
-                    if (window.sendToGASWithFallback) {
-                        const fallbackResult = await window.sendToGASWithFallback(GAS_URL, data);
-                        console.log('✅ フォールバック送信成功:', fallbackResult);
-                        return fallbackResult;
-                    } else {
-                        throw new Error('フォールバック機能が利用できません');
-                    }
+                    const fallbackResult = await window.sendToGASWithFallback(GAS_URL, data);
+                    console.log('✅ フォールバック送信成功:', fallbackResult);
+                    return fallbackResult;
                 } catch (fallbackError) {
                     console.error('💥 フォールバック送信も失敗:', {
                         name: fallbackError.name,
                         message: fallbackError.message,
-                        stack: fallbackError.stack,
-                        errorObject: fallbackError // エラーオブジェクト全体も出力
+                        stack: fallbackError.stack
                     });
-                    throw new Error(`通常送信・フォールバック送信ともに失敗しました。\n通常送信エラー: ${error.message}\nフォールバックエラー: ${fallbackError.message}`);
+                    throw new Error(`JSONP送信・フォールバック送信ともに失敗しました。
+JSONPエラー: ${jsonpError.message}
+フォールバックエラー: ${fallbackError.message}`);
                 }
             }
 
-            // その他のエラー
-            if (error.message.includes('CORS')) {
-                throw new Error('CORS エラー: GAS側の設定でCORSを有効にしてください。');
-            } else {
-                throw new Error(`送信に失敗しました: ${error.message}`);
-            }
+            throw new Error(`JSONP送信に失敗しました: ${jsonpError.message}`);
         }
     }
+
+    // JSONPでGASにデータを送信
+    sendToGASViaJsonp(gasUrl, data) {
+        return new Promise((resolve, reject) => {
+            const callbackName = `weddingGiftJsonp_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+            const params = new URLSearchParams();
+            params.append('action', 'submit');
+            params.append('data', JSON.stringify(data));
+            params.append('callback', callbackName);
+            params.append('t', Date.now().toString());
+
+            const script = document.createElement('script');
+            script.src = `${gasUrl}?${params.toString()}`;
+            script.async = true;
+
+            let timeoutId;
+
+            const cleanup = () => {
+                if (timeoutId) {
+                    clearTimeout(timeoutId);
+                }
+                if (window[callbackName]) {
+                    delete window[callbackName];
+                }
+                if (script.parentNode) {
+                    script.parentNode.removeChild(script);
+                }
+            };
+
+            window[callbackName] = (response) => {
+                cleanup();
+                resolve(response);
+            };
+
+            script.onerror = () => {
+                cleanup();
+                reject(new Error('JSONPリクエストでエラーが発生しました'));
+            };
+
+            timeoutId = setTimeout(() => {
+                cleanup();
+                reject(new Error('JSONPリクエストがタイムアウトしました'));
+            }, 15000);
+
+            console.log('📡 JSONP送信URL:', script.src);
+            document.head.appendChild(script);
+        });
+    }
+
 
     // 完了モーダルを表示
     showCompletionModal(isChange) {
