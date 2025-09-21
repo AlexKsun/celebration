@@ -219,6 +219,12 @@ class WeddingGiftCatalog {
 
         console.log('✅ 商品描画完了');
 
+        // ローディングを確実に非表示
+        const productsLoadingOverlay = document.getElementById('productsLoadingOverlay');
+        if (productsLoadingOverlay) {
+            this.hideLoading(productsLoadingOverlay);
+        }
+
         // 選択状態を復元
         this.updateProductSelection();
     }
@@ -905,7 +911,11 @@ class WeddingGiftCatalog {
 
     // ローディングを非表示
     hideLoading(overlay) {
-        overlay.classList.remove('show');
+        if (overlay) {
+            overlay.classList.remove('show');
+            // 確実に非表示にする
+            overlay.style.display = 'none';
+        }
     }
 
     // エラーメッセージを表示
