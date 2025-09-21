@@ -38,25 +38,9 @@ window.WeddingGiftAdmin = {
                 throw new Error('GAS URLが設定されていません');
             }
 
-            const response = await fetch(gasUrl, {
-                method: 'GET',
-                mode: 'cors'
-            });
-
-            console.log('GET レスポンス:', {
-                status: response.status,
-                statusText: response.statusText,
-                headers: Object.fromEntries(response.headers.entries())
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                console.log('✅ GAS GET接続テスト成功:', result);
-                alert('GAS GET接続テスト成功！CORSは正しく設定されています。');
-                return true;
-            } else {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
+            console.log('⚠️ CORS問題回避のため、GET接続テストは無効化されています');
+            alert('CORS問題回避のため、GET接続テストは無効化されています。フォーム送信を使用してください。');
+            return false;
         } catch (error) {
             console.error('❌ GAS GET接続テスト失敗:', error);
             alert('GAS GET接続テスト失敗: ' + error.message);
@@ -93,30 +77,9 @@ window.WeddingGiftAdmin = {
                 isTest: true
             };
 
-            const response = await fetch(window.weddingGiftConfig.gasUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(testData),
-                mode: 'cors'
-            });
-
-            console.log('POST レスポンス:', {
-                status: response.status,
-                statusText: response.statusText,
-                headers: Object.fromEntries(response.headers.entries())
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                console.log('✅ GAS POST接続テスト成功:', result);
-                alert('GAS POST接続テスト成功！データ送信が正常に動作します。');
-            } else {
-                const errorText = await response.text();
-                console.error('POST エラー詳細:', errorText);
-                throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
-            }
+            console.log('⚠️ CORS問題回避のため、POST接続テストは無効化されています');
+            alert('CORS問題回避のため、POST接続テストは無効化されています。フォーム送信を使用してください。');
+            return false;
         } catch (error) {
             console.error('❌ GAS POST接続テスト失敗:', error);
             alert('GAS POST接続テスト失敗: ' + error.message);
