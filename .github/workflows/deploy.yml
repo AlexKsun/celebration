@@ -32,12 +32,12 @@ jobs:
         echo "環境変数を置換中..."
 
         # HTMLファイル内の環境変数プレースホルダーを置換
-        sed -i "s|{{GAS_URL}}|${{ vars.GAS_URL }}|g" index.html
+        sed -i "s|{{GAS_URL}}|${{ secrets.GAS_URL }}|g" index.html
 
         # 置換結果を確認（セキュリティのため一部をマスク）
-        echo "GAS_URL置換完了: $(echo '${{ vars.GAS_URL }}' | sed 's/\(.\{10\}\).*/\1.../')"
+        echo "GAS_URL置換完了: $(echo '${{ secrets.GAS_URL }}' | sed 's/\(.\{10\}\).*/\1.../')"
       env:
-        GAS_URL: ${{ vars.GAS_URL }}
+        GAS_URL: ${{ secrets.GAS_URL }}
 
     - name: Remove development files for production
       run: |
@@ -57,14 +57,14 @@ jobs:
         echo "設定を検証中..."
 
         # 必要な環境変数が設定されているかチェック
-        if [ -z "${{ vars.GAS_URL }}" ]; then
+        if [ -z "${{ secrets.GAS_URL }}" ]; then
           echo "❌ エラー: GAS_URL が設定されていません"
           echo "GitHub Pages の Environment variables で GAS_URL を設定してください"
           exit 1
         fi
 
         # GAS URLの形式をチェック
-        if [[ ! "${{ vars.GAS_URL }}" =~ ^https://script\.google\.com/macros/s/.*/exec$ ]]; then
+        if [[ ! "${{ secrets.GAS_URL }}" =~ ^https://script\.google\.com/macros/s/.*/exec$ ]]; then
           echo "❌ エラー: GAS_URL の形式が正しくありません"
           echo "正しい形式: https://script.google.com/macros/s/SCRIPT_ID/exec"
           exit 1
