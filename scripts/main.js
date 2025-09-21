@@ -928,16 +928,69 @@ class WeddingGiftCatalog {
                 return;
             }
 
-            // CORS問題を避けるため、申し込み状況確認は無効化
-            console.log('📝 CORS問題回避のため申し込み状況確認をスキップし、新規申し込みとして処理します');
-            this.hasExistingApplication = false;
-            this.existingApplicationData = null;
+            // 申し込み状況確認をGAS経由で実行
+            console.log('📊 GAS経由で申し込み状況を確認中...');
+            const statusResult = await this.checkStatusViaGAS(GAS_URL);
+
+            if (statusResult) {
+                console.log('✅ 申し込み状況確認完了:', statusResult);
+                this.handleApplicationStatus(statusResult);
+            } else {
+                console.log('📝 申し込み履歴なし - 新規申し込みとして処理');
+                this.hasExistingApplication = false;
+                this.existingApplicationData = null;
+            }
 
         } catch (error) {
             console.error('❌ 申し込み状況確認エラー:', error);
             // エラーの場合は通常の新規申し込みUIで進行
             this.hasExistingApplication = false;
             this.existingApplicationData = null;
+        }
+    }
+
+    // GAS経由で申し込み状況を確認
+    async checkStatusViaGAS(gasUrl) {
+        try {
+            console.log('📡 GETリクエストで申し込み状況確認中...');
+
+            // 状況確認用のURLパラメータを追加
+            const checkUrl = new URL(gasUrl);
+            checkUrl.searchParams.append('action', 'status');
+
+            console.log('🌐 リクエストURL:', checkUrl.toString());
+
+            // シンプルなGETリクエストで状況確認
+            const response = await fetch(checkUrl.toString(), {
+                method: 'GET',
+                mode: 'cors',
+                credentials: 'omit',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*'
+                }
+            });
+
+            console.log('📊 レスポンス状況:', {
+                status: response.status,
+                statusText: response.statusText,
+                ok: response.ok
+            });
+
+            if (!response.ok) {
+                console.warn(`⚠️ 申し込み状況確認レスポンスエラー: ${response.status} ${response.statusText}`);
+                return null;
+            }
+
+            // レスポンスをJSONとして解析
+            const statusResult = await response.json();
+            console.log('✅ 申し込み状況確認成功:', statusResult);
+
+            return statusResult;
+
+        } catch (error) {
+            console.warn('⚠️ 申し込み状況確認エラー:', error);
+            // CORS等のエラーの場合は新規申し込みとして処理
+            return null;
         }
     }
 
