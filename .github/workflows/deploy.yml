@@ -27,6 +27,20 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
+    - name: Extract illustration images from zip
+      run: |
+        echo "イラスト画像を展開中..."
+
+        # zipファイルが存在する場合は展開
+        if [ -f "assets/images/illust.zip" ]; then
+          mkdir -p assets/images/illust
+          unzip -o assets/images/illust.zip -d assets/images/illust/
+          echo "✅ illust.zip を展開しました"
+          ls -lh assets/images/illust/*.jpg 2>/dev/null || echo "⚠️ jpgファイルが見つかりません"
+        else
+          echo "⚠️ illust.zip が見つかりません（スキップ）"
+        fi
+
     - name: Replace environment variables
       run: |
         echo "環境変数を置換中..."

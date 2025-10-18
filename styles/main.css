@@ -960,6 +960,66 @@ h1, h2, h3 {
   box-shadow: var(--shadow-strong);
   transform: scale(0.9);
   transition: var(--transition);
+  position: relative;
+}
+
+/* Modal Illustration Images */
+.modal-illust {
+  position: absolute;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.modal-illust-confirm {
+  top: 10px;
+  right: 10px;
+  width: 160px;
+  height: auto;
+  transform: rotate(3deg);
+}
+
+.modal-illust-complete {
+  bottom: 10px;
+  left: 10px;
+  width: 100px;
+  height: auto;
+  transform: rotate(-5deg);
+}
+
+/* モーダル内のコンテンツを画像より前面に */
+.modal-header,
+.modal-body,
+.modal-footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .modal-illust-confirm {
+    width: 140px;
+    right: -20px;
+  }
+
+  .modal-illust-complete {
+    width: 100px;
+    left: -20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-illust-confirm {
+    width: 100px;
+    right: -10px;
+    top: -10px;
+  }
+
+  .modal-illust-complete {
+    width: 80px;
+    left: -10px;
+    bottom: -10px;
+  }
 }
 
 .modal.show .modal-content {

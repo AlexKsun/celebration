@@ -33,3 +33,7 @@ coverage/
 
 # 設定ファイル（個人設定）
 config.local.js
+
+# 画像ファイル(zipから展開されるファイルは除外)
+assets/images/illust/
+!assets/images/*.zip
