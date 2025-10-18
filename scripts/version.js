@@ -4,7 +4,7 @@
 class VersionManager {
     constructor() {
         // バージョン番号（更新時にこれを変更する）
-        this.currentVersion = '1.0.2';
+        this.currentVersion = '1.0.3';
         this.versionKey = 'wedding_gift_app_version';
     }
 
