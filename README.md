@@ -217,6 +217,42 @@ DISCORD_WEBHOOK_URL: 'https://discord.com/api/webhooks/...'
 - **Googleスプレッドシート**: 申し込み履歴スプレッドシートで、ユーザーの選択内容と申し込み日時を確認できます。
 - **Discord**: 設定が有効な場合、Discordの指定チャンネルにリアルタイムで申し込み通知が送信されます。
 
+## 🔄 バージョン管理とキャッシュクリア
+
+アプリケーションには自動キャッシュクリア機能が実装されています。
+
+### バージョン更新手順
+
+コードを更新した場合、以下の手順でバージョン番号を更新してください：
+
+1. **`scripts/version.js`** のバージョン番号を更新：
+   ```javascript
+   this.currentVersion = '1.0.2'; // バージョンアップ
+   ```
+
+2. **`index.html`** のすべてのリソースURLのバージョンパラメータを更新：
+   ```html
+   <link rel="stylesheet" href="styles/main.css?v=1.0.2">
+   <script src="scripts/version.js?v=1.0.2"></script>
+   <script src="scripts/main.js?v=1.0.2"></script>
+   <!-- 他のスクリプトファイルも同様に更新 -->
+   ```
+
+### 自動キャッシュクリア機能
+
+- ユーザーがサイトにアクセスした際、保存されているバージョンと現在のバージョンを比較
+- バージョンが異なる場合、自動的に古いLocalStorageデータをクリア
+- 1回だけページをリロードして、最新のコードとデータで動作
+
+### 手動キャッシュクリア（デバッグ用）
+
+開発中にキャッシュを強制的にクリアしたい場合：
+
+```javascript
+// ブラウザのコンソールで実行
+window.versionManager.forceClearCache()
+```
+
 ## 🔧 カスタマイズ
 
 ### 環境変数による設定

@@ -1,12 +1,56 @@
 {
   "products": [
     {
+      "id": "nano_care",
+      "name": "ヘアードライヤー ナノケア",
+      "brand": "Panasonic",
+      "category": "bath",
+      "specs": "高さ10.0×幅18.8×奥行32.9cm / 1200W",
+      "description": "高浸透ナノイーで髪の内側にうるおいを。",
+      "available": true,
+      "variants": [
+        {
+          "id": "black",
+          "name": "チャコールブラック",
+          "color": "#343a42",
+          "images": [
+            "https://panasonicjp.scene7.com/is/image/panasonicjp/EH-NA0K-K_main_cmj?fit=constrain%2C1&wid=624&hei=624&fmt=png-alpha"
+          ],
+          "price": "38,610円",
+          "available": true
+        },
+        {
+          "id": "pink",
+          "name": "さくらピンク",
+          "color": "#f4e4e4",
+          "images": [
+            "https://panasonicjp.scene7.com/is/image/panasonicjp/EH-NA0K-P_main_cmj_v2?fit=constrain%2C1&wid=624&hei=624&fmt=png-alpha"
+          ],
+          "price": "38,610円",
+          "available": true
+        },
+        {
+          "id": "gray",
+          "name": "ミストグレー",
+          "color": "#c6cacf",
+          "images": [
+            "https://panasonicjp.scene7.com/is/image/panasonicjp/EH-NA0K-H_main_cmj?fit=constrain%2C1&wid=624&hei=624&fmt=png-alpha"
+          ],
+          "price": "38,610円",
+          "available": true
+        }
+      ],
+      "defaultVariant": "pink",
+      "productUrl": "https://panasonic.jp/hair/feature/NA-series/nanoe.html"
+    },
+    {
       "id": "balmuda_pot",
       "name": "The Pot",
       "brand": "BALMUDA",
       "category": "kitchen",
       "specs": "W269×H128×D170mm / 0.6L / 1200W",
       "description": "美しいフォルムの電気ケトル",
+      "available": false,
       "variants": [
         {
           "id": "white",
@@ -39,6 +83,7 @@
       "category": "kitchen",
       "specs": "W285×H145×D240mm / 約3kg / 900W",
       "description": "おしゃれなホットサンドメーカー",
+      "available": false,
       "variants": [
         {
           "id": "red",
@@ -65,6 +110,7 @@
       "category": "living",
       "specs": "φ168×H121mm / 約6時間連続使用",
       "description": "シンプルで美しいアロマディフューザー",
+      "available": false,
       "variants": [
         {
           "id": "white",
@@ -84,6 +130,7 @@
       "category": "bath",
       "specs": "バスタオル×2、フェイスタオル×2",
       "description": "高品質な今治タオルのペアセット",
+      "available": false,
       "variants": [
         {
           "id": "white",
@@ -103,6 +150,7 @@
       "category": "pair",
       "specs": "容量：350ml×2個",
       "description": "新婚生活にぴったりのペアセット",
+      "available": false,
       "variants": [
         {
           "id": "sand_white_gray",

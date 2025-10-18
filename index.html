@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wedding Gift Catalog - ご結婚おめでとうございます！</title>
-    <meta name="description" content="友人への結婚祝いカタログギフト。お好きな商品を1つお選びください。">
+    <title>Wedding Gift Catalog - 結婚おめでとう！ Brothersより</title>
+    <meta name="description" content="結婚祝いのカタログギフトです。お好きな商品を1つお選びください。">
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -19,7 +19,7 @@
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/main.css?v=1.0.1">
 </head>
 <body>
     <!-- Header Section -->
@@ -35,8 +35,8 @@
         <!-- Welcome Message -->
         <section class="welcome-section">
             <div class="welcome-card">
-                <h2 class="welcome-title">ご結婚おめでとうございます！</h2>
-                <p class="welcome-text">お好きな商品を1つお選びください</p>
+                <h2 class="welcome-title">ご結婚おめでとうございます！ Brothersより</h2>
+                <p class="welcome-text">結婚祝いのカタログギフトです。お好きな商品を1つお選びください。</p>
             </div>
         </section>
 
@@ -44,23 +44,28 @@
         <section class="category-section">
             <div class="category-buttons">
                 <button class="category-btn active" data-category="all">
-                    <span class="material-icons">apps</span>
+                    <span class="material-icons">grid_view</span>
                     すべて
                 </button>
                 <button class="category-btn" data-category="kitchen">
-                    🍳 キッチン用品
+                    <span class="material-icons">restaurant</span>
+                    キッチン
                 </button>
                 <button class="category-btn" data-category="living">
-                    🏠 リビング用品
+                    <span class="material-icons">weekend</span>
+                    リビング
                 </button>
                 <button class="category-btn" data-category="bath">
-                    🛁 バス・ビューティー
+                    <span class="material-icons">spa</span>
+                    バス
                 </button>
                 <button class="category-btn" data-category="pair">
-                    💕 ペア用品
+                    <span class="material-icons">favorite</span>
+                    ペア
                 </button>
                 <button class="category-btn" data-category="experience">
-                    ✨ 体験ギフト
+                    <span class="material-icons">auto_awesome</span>
+                    体験
                 </button>
             </div>
         </section>
@@ -95,7 +100,7 @@
     <div class="modal" id="confirmModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>🎁 ありがとうございます！</h3>
+                <h3><span class="material-icons" style="vertical-align: middle; margin-right: 0.5rem;">card_giftcard</span>ありがとうございます！</h3>
             </div>
             <div class="modal-body" id="confirmModalBody">
                 <!-- Confirmation details will be inserted here -->
@@ -111,7 +116,7 @@
     <div class="modal" id="completionModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="completionTitle">✨ 選択完了！</h3>
+                <h3 id="completionTitle"><span class="material-icons" style="vertical-align: middle; margin-right: 0.5rem;">check_circle</span>選択完了！</h3>
             </div>
             <div class="modal-body" id="completionModalBody">
                 <!-- Completion message will be inserted here -->
@@ -140,12 +145,15 @@
         };
     </script>
 
-    <script src="scripts/env-loader.js"></script>
-    <script src="scripts/config.js"></script>
-    <script src="scripts/storage.js"></script>
-    <script src="scripts/image-fallback.js"></script>
-    <script src="scripts/gas-fallback.js"></script>
-    <script src="scripts/main.js"></script>
+    <!-- バージョン管理（最初に読み込む） -->
+    <script src="scripts/version.js?v=1.0.1"></script>
+
+    <script src="scripts/env-loader.js?v=1.0.1"></script>
+    <script src="scripts/config.js?v=1.0.1"></script>
+    <script src="scripts/storage.js?v=1.0.1"></script>
+    <script src="scripts/image-fallback.js?v=1.0.1"></script>
+    <script src="scripts/gas-fallback.js?v=1.0.1"></script>
+    <script src="scripts/main.js?v=1.0.1"></script>
 
     <!-- デバッグツール（開発環境用） -->
     <script src="scripts/debug-footer.js"></script>

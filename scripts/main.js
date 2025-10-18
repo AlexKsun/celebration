@@ -61,8 +61,11 @@ class WeddingGiftCatalog {
             this.hideLoading(document.getElementById('productsLoadingOverlay'));
         } catch (error) {
             console.error('初期化エラー:', error);
-            this.showError('商品データの読み込みに失敗しました。');
+            this.showError('商品データの読み込みに失敗しました。ページをリロードしてもう一度お試しください。');
             this.hideLoading(document.getElementById('productsLoadingOverlay'));
+
+            // エラー詳細を画面に表示
+            this.showDetailedError(error);
         }
     }
 
@@ -114,17 +117,46 @@ class WeddingGiftCatalog {
             // スケルトンローディングを表示
             this.showSkeletonLoading();
 
-            const response = await fetch('./data/products.json');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            // 複数のパスを試行（フォールバック対応）
+            const possiblePaths = [
+                'data/products.json',           // ルート相対パス
+                './data/products.json',         // 現在のディレクトリからの相対パス
+                '../data/products.json',        // 親ディレクトリからの相対パス
+                `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '')}/data/products.json` // 絶対パス
+            ];
+
+            let lastError = null;
+            let data = null;
+
+            for (const path of possiblePaths) {
+                try {
+                    console.log(`📡 商品データ読み込み試行: ${path}`);
+                    const response = await fetch(path);
+
+                    if (response.ok) {
+                        data = await response.json();
+                        console.log(`✅ 商品データ読み込み成功: ${path}`);
+                        break;
+                    } else {
+                        console.warn(`⚠️ ${path} - HTTP ${response.status}`);
+                    }
+                } catch (error) {
+                    console.warn(`⚠️ ${path} - ${error.message}`);
+                    lastError = error;
+                }
             }
-            const data = await response.json();
+
+            if (!data || !data.products) {
+                throw new Error('商品データの読み込みに失敗しました。すべてのパスで取得できませんでした。');
+            }
+
             this.products = data.products;
+            console.log(`📦 商品数: ${this.products.length}`);
 
             // スケルトンローディングを非表示
             this.hideSkeletonLoading();
         } catch (error) {
-            console.error('商品データ読み込みエラー:', error);
+            console.error('❌ 商品データ読み込みエラー:', error);
             this.hideSkeletonLoading();
             throw error;
         }
@@ -266,9 +298,12 @@ class WeddingGiftCatalog {
 
         grid.innerHTML = '';
 
+        // available=trueの商品のみをフィルタリング（デフォルトはtrue）
+        const availableProducts = this.products.filter(p => p.available !== false);
+
         const filteredProducts = this.currentCategory === 'all'
-            ? this.products
-            : this.products.filter(p => p.category === this.currentCategory);
+            ? availableProducts
+            : availableProducts.filter(p => p.category === this.currentCategory);
 
         console.log('📋 フィルター後商品数:', filteredProducts.length);
 
@@ -361,10 +396,13 @@ class WeddingGiftCatalog {
 
     // バリエーション選択UIを作成
     createVariantSelection(product) {
-        const hasColors = product.variants.some(v => v.color);
+        // available=trueのバリエーションのみをフィルタリング（デフォルトはtrue）
+        const availableVariants = product.variants.filter(v => v.available !== false);
+
+        const hasColors = availableVariants.some(v => v.color);
 
         // バリエーションが1つでも、色情報があれば表示する
-        if (!hasColors && product.variants.length <= 1) {
+        if (!hasColors && availableVariants.length <= 1) {
             return ''; // 色情報がなく、バリエーションも1つ以下なら表示しない
         }
 
@@ -373,7 +411,7 @@ class WeddingGiftCatalog {
                 ${hasColors ? `
                     <label class="variant-label">色：</label>
                     <div class="color-options">
-                        ${product.variants.map(variant => `
+                        ${availableVariants.map(variant => `
                             <div
                                 class="color-option ${variant.id === product.defaultVariant ? 'selected' : ''}"
                                 data-variant-id="${variant.id}"
@@ -983,24 +1021,24 @@ class WeddingGiftCatalog {
         const completionModalBody = document.getElementById('completionModalBody');
 
         if (isChange) {
-            completionTitle.textContent = '🔄 選択変更完了！';
+            completionTitle.innerHTML = '<span class="material-icons" style="vertical-align: middle; margin-right: 0.5rem;">sync</span>選択変更完了！';
             completionModalBody.innerHTML = `
                 <div style="text-align: center;">
                     <p><strong>${product.name}</strong> (${variant.name}) に変更いたしました</p>
                     <p style="margin-top: 1rem;">変更を承りました</p>
                     <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;">
-                        後日お届け予定をご連絡いたします
+                        後日お届けするので待っててね！
                     </p>
                 </div>
             `;
         } else {
-            completionTitle.textContent = '✨ 選択完了！';
+            completionTitle.innerHTML = '<span class="material-icons" style="vertical-align: middle; margin-right: 0.5rem;">check_circle</span>選択完了！';
             completionModalBody.innerHTML = `
                 <div style="text-align: center;">
                     <p><strong>${product.name}</strong> (${variant.name}) を承りました</p>
-                    <p style="margin-top: 1rem;">後日お届け予定をご連絡いたします</p>
+                    <p style="margin-top: 1rem;">後日お届けするので待っててね！</p>
                     <p style="margin-top: 1.5rem; color: var(--accent-color);">
-                        素敵な新生活をお過ごしください💕
+                        <span class="material-icons" style="vertical-align: middle; font-size: 1.2rem;">favorite</span> 素敵な新生活をお過ごしください
                     </p>
                 </div>
             `;
@@ -1053,6 +1091,63 @@ class WeddingGiftCatalog {
         alert(message); // 簡易実装、後でより良いUIに置き換え可能
     }
 
+    // 詳細なエラー情報を画面に表示
+    showDetailedError(error) {
+        const grid = document.getElementById('productsGrid');
+        if (!grid) return;
+
+        const errorInfo = `
+            <div style="
+                padding: 2rem;
+                text-align: center;
+                background: #fff3cd;
+                border: 1px solid #ffc107;
+                border-radius: 10px;
+                margin: 2rem;
+            ">
+                <h3 style="color: #856404; margin-bottom: 1rem;">
+                    <span class="material-icons" style="vertical-align: middle; margin-right: 0.5rem; font-size: 1.5rem;">warning</span>商品データの読み込みに失敗しました
+                </h3>
+                <p style="color: #856404; margin-bottom: 1rem;">
+                    ページをリロードしてもう一度お試しください
+                </p>
+                <button
+                    onclick="window.location.reload()"
+                    style="
+                        background: #ffc107;
+                        color: #000;
+                        border: none;
+                        padding: 0.75rem 1.5rem;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        font-size: 1rem;
+                        font-weight: bold;
+                    "
+                >
+                    <span class="material-icons" style="vertical-align: middle; margin-right: 0.25rem; font-size: 1rem;">refresh</span>ページをリロード
+                </button>
+                <details style="margin-top: 1.5rem; text-align: left;">
+                    <summary style="cursor: pointer; color: #856404;">
+                        詳細情報（開発者向け）
+                    </summary>
+                    <pre style="
+                        background: #f8f9fa;
+                        padding: 1rem;
+                        border-radius: 5px;
+                        overflow-x: auto;
+                        font-size: 0.875rem;
+                        margin-top: 0.5rem;
+                    ">${error.message || error}
+
+現在のURL: ${window.location.href}
+User Agent: ${navigator.userAgent}</pre>
+                </details>
+            </div>
+        `;
+
+        grid.innerHTML = errorInfo;
+    }
+
     // ボタンのローディング状態を制御
     setButtonsLoadingState(isLoading, message = 'ローディング中...') {
         // 商品選択ボタン
@@ -1103,6 +1198,9 @@ class WeddingGiftCatalog {
                 console.warn('⚠️ GAS_URLが本番用に設定されていません - 申し込み状況確認をスキップ');
                 this.hasExistingApplication = false;
                 this.existingApplicationData = null;
+                // ローディング状態を解除せずにreturnすると、ボタンが「ステータス確認中」のまま残る
+                // ここでは早期returnせず、履歴なしとして処理を続ける
+                this.handleApplicationStatus({ hasApplication: false, lastApplication: null });
                 return;
             }
 
@@ -1207,14 +1305,15 @@ class WeddingGiftCatalog {
                 const welcomeText = welcomeSection.querySelector('.welcome-text');
 
                 if (welcomeTitle) {
-                    welcomeTitle.textContent = '選択変更';
+                    welcomeTitle.textContent = '結婚おめでとう！ Brothersより';
                     console.log('🏷️ タイトルを変更: 選択変更');
                 }
 
                 if (welcomeText) {
                     welcomeText.innerHTML = `
+                        <p>すでに申し込み済です</p>
                         <p>現在の選択: <strong>${lastApp.selectedItem.name}</strong> (${lastApp.selectedItem.variant.name})</p>
-                        <p>変更したい商品を選択してください</p>
+                        <p>変更する場合は商品を選択してください</p>
                     `;
                     console.log('📝 ウェルカムテキストを変更');
                 }
