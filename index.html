@@ -19,7 +19,7 @@
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <link rel="stylesheet" href="styles/main.css?v=1.0.4">
+    <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
     <!-- Password Overlay -->
@@ -149,7 +149,8 @@
     <!-- Completion Modal -->
     <div class="modal" id="completionModal">
         <div class="modal-content">
-            <img src="assets/images/illust/01.jpg" class="modal-illust modal-illust-complete" alt="">
+            <img src="assets/images/illust/01.jpg" class="modal-illust modal-illust-complete-left" alt="">
+            <img src="assets/images/illust/01.jpg" class="modal-illust modal-illust-complete-right" alt="">
             <div class="modal-header">
                 <h3 id="completionTitle"><span class="material-icons" style="vertical-align: middle; margin-right: 0.5rem;">check_circle</span>選択完了！</h3>
             </div>
@@ -182,17 +183,17 @@
     </script>
 
     <!-- バージョン管理（最初に読み込む） -->
-    <script src="scripts/version.js?v=1.0.4"></script>
+    <script src="scripts/version.js"></script>
 
-    <script src="scripts/env-loader.js?v=1.0.4"></script>
+    <script src="scripts/env-loader.js"></script>
 
     <!-- パスワード認証（env-loaderの後に読み込む） -->
-    <script src="scripts/auth.js?v=1.0.4"></script>
-    <script src="scripts/config.js?v=1.0.4"></script>
-    <script src="scripts/storage.js?v=1.0.4"></script>
-    <script src="scripts/image-fallback.js?v=1.0.4"></script>
-    <script src="scripts/gas-fallback.js?v=1.0.4"></script>
-    <script src="scripts/main.js?v=1.0.4"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/config.js"></script>
+    <script src="scripts/storage.js"></script>
+    <script src="scripts/image-fallback.js"></script>
+    <script src="scripts/gas-fallback.js"></script>
+    <script src="scripts/main.js"></script>
 
     <!-- デバッグツール（開発環境用） -->
     <script src="scripts/debug-footer.js"></script>

@@ -41,6 +41,20 @@ jobs:
           echo "⚠️ illust.zip が見つかりません（スキップ）"
         fi
 
+    - name: Add version cache busting
+      run: |
+        echo "バージョン番号を追加中..."
+
+        # version.jsからバージョン番号を取得
+        VERSION=$(grep "this.currentVersion = " scripts/version.js | sed "s/.*'\(.*\)'.*/\1/")
+        echo "検出されたバージョン: $VERSION"
+
+        # HTMLファイル内のリソースURLにバージョン番号を追加
+        sed -i "s|href=\"styles/main.css\"|href=\"styles/main.css?v=$VERSION\"|g" index.html
+        sed -i "s|src=\"scripts/\([^\"]*\)\.js\"|src=\"scripts/\1.js?v=$VERSION\"|g" index.html
+
+        echo "✅ バージョン $VERSION を追加しました"
+
     - name: Replace environment variables
       run: |
         echo "環境変数を置換中..."

@@ -4,8 +4,13 @@
 class VersionManager {
     constructor() {
         // バージョン番号（更新時にこれを変更する）
-        this.currentVersion = '1.0.4';
+        this.currentVersion = '1.0.5';
         this.versionKey = 'wedding_gift_app_version';
+    }
+
+    // バージョン付きURLを生成
+    getVersionedUrl(path) {
+        return `${path}?v=${this.currentVersion}`;
     }
 
     // バージョンチェックとキャッシュクリア

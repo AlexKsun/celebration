@@ -223,20 +223,17 @@ DISCORD_WEBHOOK_URL: 'https://discord.com/api/webhooks/...'
 
 ### バージョン更新手順
 
-コードを更新した場合、以下の手順でバージョン番号を更新してください：
+コードを更新した場合、**たった1箇所**を変更するだけでOKです：
 
 1. **`scripts/version.js`** のバージョン番号を更新：
    ```javascript
-   this.currentVersion = '1.0.2'; // バージョンアップ
+   this.currentVersion = '1.0.5'; // バージョンアップ
    ```
 
-2. **`index.html`** のすべてのリソースURLのバージョンパラメータを更新：
-   ```html
-   <link rel="stylesheet" href="styles/main.css?v=1.0.2">
-   <script src="scripts/version.js?v=1.0.2"></script>
-   <script src="scripts/main.js?v=1.0.2"></script>
-   <!-- 他のスクリプトファイルも同様に更新 -->
-   ```
+2. デプロイ時、GitHub Actionsが自動的に全てのリソースURL（CSS/JS）にバージョン番号を追加します
+   - `index.html`の手動更新は不要
+   - `version.js`から自動的にバージョン番号を抽出
+   - 全てのリソースに`?v=1.0.5`が自動追加される
 
 ### 自動キャッシュクリア機能
 
