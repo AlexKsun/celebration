@@ -5,7 +5,7 @@
       "name": "ヘアードライヤー ナノケア",
       "brand": "Panasonic",
       "category": "bath",
-      "specs": "高さ10.0×幅18.8×奥行32.9cm / 1200W",
+      "specs": "高さ10.0×幅18.8×奥行32.9cm / EH-NA0K",
       "description": "高浸透ナノイーで髪の内側にうるおいを。",
       "available": true,
       "variants": [
@@ -48,26 +48,26 @@
       "name": "BALMUDA The Toaster Pro",
       "brand": "BALMUDA",
       "category": "kitchen",
-      "specs": "高さ20.9×幅35.7×奥行32.1cm / 1300W",
-      "description": "最上級のトーストでレストランの味わいに",
+      "specs": "高さ20.9×幅35.7×奥行32.1cm / K11A-SE",
+      "description": "最上級のトーストでレストランの味わいに。",
       "available": true,
       "variants": [
-        {
-          "id": "white",
-          "name": "White",
-          "color": "#ffffff",
-          "images": [
-            "https://store.balmuda.com/static/item/454/desktop.jpg"
-          ],
-          "price": "38,500円",
-          "available": true
-        },
         {
           "id": "black",
           "name": "Black",
           "color": "#333333",
           "images": [
             "https://store.balmuda.com/static/item/453/desktop.jpg"
+          ],
+          "price": "38,500円",
+          "available": true
+        },
+        {
+          "id": "white",
+          "name": "White",
+          "color": "#e9ebea",
+          "images": [
+            "https://store.balmuda.com/static/item/454/desktop.jpg"
           ],
           "price": "38,500円",
           "available": true
@@ -83,8 +83,41 @@
           "available": true
         }
       ],
-      "defaultVariant": "white",
+      "defaultVariant": "black",
       "productUrl": "https://www.balmuda.com/jp/toaster/pro-model"
+    },
+    {
+      "id": "hotcook",
+      "name": "ホットクック proシリーズ",
+      "brand": "SHARP",
+      "category": "kitchen",
+      "specs": "高さ25.6×幅34.5×奥行30.5cm / KN-HW24H",
+      "description": "自動でラクラクおいしい夕ご飯を。",
+      "available": true,
+      "variants": [
+        {
+          "id": "black",
+          "name": "プレミアムブラック",
+          "color": "#333333",
+          "images": [
+            "https://jp.sharp/hotcook/products/knhw24h/images/gallery-1.jpg"
+          ],
+          "price": "38,500円",
+          "available": true
+        },
+        {
+          "id": "white",
+          "name": "プレミアムホワイト",
+          "color": "#e9ebea",
+          "images": [
+            "https://jp.sharp/hotcook/products/knhw24h/images/gallery-3.jpg"
+          ],
+          "price": "38,500円",
+          "available": true
+        }
+      ],
+      "defaultVariant": "black",
+      "productUrl": "https://jp.sharp/hotcook/products/knhw24h/"
     },
     {
       "id": "balmuda_pot",
