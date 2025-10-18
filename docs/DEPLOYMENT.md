@@ -13,6 +13,7 @@
 | 変数名 | 値 | 説明 |
 |--------|-----|------|
 | `GAS_URL` | `https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec` | Google Apps Script WebアプリURL |
+| `AUTH_PASSWORD` | `your_secure_password` | サイトアクセス用パスワード（6文字以上推奨） |
 
 #### 2. Pages設定
 
@@ -34,9 +35,14 @@ graph LR
 
 ### 自動処理内容
 
-1. **環境変数置換**: `{{GAS_URL}}` → 実際のGAS URL
+1. **環境変数置換**:
+   - `{{GAS_URL}}` → 実際のGAS URL
+   - `{{AUTH_PASSWORD}}` → 実際のパスワード
 2. **開発ファイル削除**: `.env`, 管理者ツール等を除去
-3. **設定検証**: GAS URLの形式チェック
+3. **設定検証**:
+   - GAS URLの形式チェック
+   - AUTH_PASSWORDの存在チェック
+   - パスワードの長さチェック（6文字以上推奨）
 4. **デプロイ**: GitHub Pagesに公開
 
 ## 🔧 ローカル開発
@@ -48,16 +54,25 @@ graph LR
    cp .env.example .env
    ```
 
-2. GAS URLを設定：
+2. 環境変数を設定：
    ```bash
    # .env
    GAS_URL=https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec
+   AUTH_PASSWORD=your_local_password
    ```
 
 3. ローカルサーバー起動：
    ```bash
    python -m http.server 8000
    ```
+
+**注意:** スマホから`192.168.x.x:8000`でアクセスする場合は、`.env`の代わりに`config.dev.json`を使用してください：
+```json
+{
+  "GAS_URL": "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec",
+  "AUTH_PASSWORD": "your_local_password"
+}
+```
 
 ### 開発時の動作
 
@@ -72,11 +87,12 @@ graph LR
 **Q: デプロイが失敗する**
 ```
 ❌ エラー: GAS_URL が設定されていません
+❌ エラー: AUTH_PASSWORD が設定されていません
 ```
 
 **A: GitHub Pages の Environment variables を確認**
 1. Settings → Environments → github-pages
-2. GAS_URL が正しく設定されているか確認
+2. GAS_URL と AUTH_PASSWORD が正しく設定されているか確認
 
 **Q: GAS URLの形式エラー**
 ```
@@ -135,14 +151,27 @@ window.weddingGiftConfig.debug()
 
 ### 環境変数管理
 
-- **GitHub Secrets**: 機密情報（使用していない）
-- **Environment Variables**: 公開可能な設定値
-- **LocalStorage**: ユーザー選択状態のみ
+- **GitHub Environment Variables**:
+  - `GAS_URL`: Google Apps Script WebアプリURL
+  - `AUTH_PASSWORD`: サイトアクセス用パスワード
+- **LocalStorage**:
+  - ユーザー選択状態
+  - パスワード認証状態（7日間有効）
+- **SessionStorage**:
+  - パスワード認証状態（タブを閉じるまで有効）
+
+### パスワード認証
+
+- **認証方式**: シンプルなパスワード認証
+- **キャッシュ**: ブラウザに7日間保存（LocalStorage）
+- **セッション**: タブを閉じるまで有効（SessionStorage）
+- **推奨**: 6文字以上のパスワード
 
 ### 本番環境での配慮
 
 - 開発用ファイル（`.env`, `admin.js`）は自動削除
 - GAS URLは検証済みのもののみ使用
+- AUTH_PASSWORDの存在と長さを検証
 - CORS設定でセキュリティ確保
 
 ## 📈 パフォーマンス最適化

@@ -44,6 +44,49 @@
       "productUrl": "https://panasonic.jp/hair/feature/NA-series/nanoe.html"
     },
     {
+      "id": "balmuda_toaster",
+      "name": "BALMUDA The Toaster Pro",
+      "brand": "BALMUDA",
+      "category": "kitchen",
+      "specs": "高さ20.9×幅35.7×奥行32.1cm / 1300W",
+      "description": "最上級のトーストでレストランの味わいに",
+      "available": true,
+      "variants": [
+        {
+          "id": "white",
+          "name": "White",
+          "color": "#ffffff",
+          "images": [
+            "https://store.balmuda.com/static/item/454/desktop.jpg"
+          ],
+          "price": "38,500円",
+          "available": true
+        },
+        {
+          "id": "black",
+          "name": "Black",
+          "color": "#333333",
+          "images": [
+            "https://store.balmuda.com/static/item/453/desktop.jpg"
+          ],
+          "price": "38,500円",
+          "available": true
+        },
+        {
+          "id": "blackchrome",
+          "name": "Blackchrome",
+          "color": "#000000",
+          "images": [
+            "https://store.balmuda.com/static/item/456/desktop.jpg"
+          ],
+          "price": "38,500円",
+          "available": true
+        }
+      ],
+      "defaultVariant": "white",
+      "productUrl": "https://www.balmuda.com/jp/toaster/pro-model"
+    },
+    {
       "id": "balmuda_pot",
       "name": "The Pot",
       "brand": "BALMUDA",
