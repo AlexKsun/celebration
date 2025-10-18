@@ -33,11 +33,18 @@ jobs:
 
         # HTMLファイル内の環境変数プレースホルダーを置換
         sed -i "s|{{GAS_URL}}|${{ secrets.GAS_URL }}|g" index.html
+        sed -i "s|{{AUTH_PASSWORD}}|${{ secrets.AUTH_PASSWORD }}|g" index.html
+
+        # window.ENV に AUTH_PASSWORD を追加
+        sed -i "s|GAS_URL: '{{GAS_URL}}'|GAS_URL: '{{GAS_URL}}', AUTH_PASSWORD: '{{AUTH_PASSWORD}}'|g" index.html
+        sed -i "s|GAS_URL: '${{ secrets.GAS_URL }}'|GAS_URL: '${{ secrets.GAS_URL }}', AUTH_PASSWORD: '${{ secrets.AUTH_PASSWORD }}'|g" index.html
 
         # 置換結果を確認（セキュリティのため一部をマスク）
         echo "GAS_URL置換完了: $(echo '${{ secrets.GAS_URL }}' | sed 's/\(.\{10\}\).*/\1.../')"
+        echo "AUTH_PASSWORD置換完了: $(echo '${{ secrets.AUTH_PASSWORD }}' | sed 's/./*/g')"
       env:
         GAS_URL: ${{ secrets.GAS_URL }}
+        AUTH_PASSWORD: ${{ secrets.AUTH_PASSWORD }}
 
     - name: Remove development files for production
       run: |
@@ -63,6 +70,12 @@ jobs:
           exit 1
         fi
 
+        if [ -z "${{ secrets.AUTH_PASSWORD }}" ]; then
+          echo "❌ エラー: AUTH_PASSWORD が設定されていません"
+          echo "GitHub Pages の Environment variables で AUTH_PASSWORD を設定してください"
+          exit 1
+        fi
+
         # GAS URLの形式をチェック
         if [[ ! "${{ secrets.GAS_URL }}" =~ ^https://script\.google\.com/macros/s/.*/exec$ ]]; then
           echo "❌ エラー: GAS_URL の形式が正しくありません"
@@ -70,7 +83,14 @@ jobs:
           exit 1
         fi
 
+        # パスワードの長さをチェック（最低6文字）
+        if [ ${#AUTH_PASSWORD} -lt 6 ]; then
+          echo "⚠️ 警告: AUTH_PASSWORD は6文字以上を推奨します"
+        fi
+
         echo "✅ 設定検証完了"
+      env:
+        AUTH_PASSWORD: ${{ secrets.AUTH_PASSWORD }}
 
     - name: Setup Pages
       uses: actions/configure-pages@v4
