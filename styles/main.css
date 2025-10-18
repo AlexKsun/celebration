@@ -981,10 +981,10 @@ h1, h2, h3 {
 
 .modal-illust-complete {
   bottom: 10px;
-  left: 10px;
+  right: 10px;
   width: 100px;
   height: auto;
-  transform: rotate(-5deg);
+  transform: rotate(5deg);
 }
 
 /* モーダル内のコンテンツを画像より前面に */
@@ -998,27 +998,29 @@ h1, h2, h3 {
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
   .modal-illust-confirm {
-    width: 140px;
-    right: -20px;
+    width: 120px;
+    right: 8px;
+    top: 8px;
   }
 
   .modal-illust-complete {
-    width: 100px;
-    left: -20px;
+    width: 70px;
+    right: 8px;
+    bottom: 8px;
   }
 }
 
 @media (max-width: 480px) {
   .modal-illust-confirm {
-    width: 100px;
-    right: -10px;
-    top: -10px;
+    width: 90px;
+    right: 10px;
+    top: 10px;
   }
 
   .modal-illust-complete {
-    width: 80px;
-    left: -10px;
-    bottom: -10px;
+    width: 60px;
+    right: 10px;
+    bottom: 10px;
   }
 }
 
