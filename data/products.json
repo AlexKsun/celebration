@@ -10,21 +10,21 @@
       "available": true,
       "variants": [
         {
-          "id": "black",
-          "name": "チャコールブラック",
-          "color": "#343a42",
-          "images": [
-            "https://panasonicjp.scene7.com/is/image/panasonicjp/EH-NA0K-K_main_cmj?fit=constrain%2C1&wid=624&hei=624&fmt=png-alpha"
-          ],
-          "price": "38,610円",
-          "available": true
-        },
-        {
           "id": "pink",
           "name": "さくらピンク",
           "color": "#f4e4e4",
           "images": [
             "https://panasonicjp.scene7.com/is/image/panasonicjp/EH-NA0K-P_main_cmj_v2?fit=constrain%2C1&wid=624&hei=624&fmt=png-alpha"
+          ],
+          "price": "38,610円",
+          "available": true
+        },
+        {
+          "id": "black",
+          "name": "チャコールブラック",
+          "color": "#343a42",
+          "images": [
+            "https://panasonicjp.scene7.com/is/image/panasonicjp/EH-NA0K-K_main_cmj?fit=constrain%2C1&wid=624&hei=624&fmt=png-alpha"
           ],
           "price": "38,610円",
           "available": true
