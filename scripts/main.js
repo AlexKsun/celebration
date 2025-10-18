@@ -34,10 +34,8 @@ class WeddingGiftCatalog {
             console.log('✅ 商品描画呼び出し完了');
             this.adjustBodyPadding();
 
-            // GAS通信中はボタンをローディング状態に
-            this.setButtonsLoadingState(true, 'ステータス確認中...');
-
             // GAS通信は非同期で実行し、結果が返ってきたら状態を更新
+            // ボタンのローディング状態は設定せず、バックグラウンドで処理
             console.log('📊 ステータス確認を非同期実行中...');
             this.checkApplicationStatus()
                 .then(() => {
@@ -45,14 +43,12 @@ class WeddingGiftCatalog {
                     this.restoreSelection();
                     this.updateFooter();
                     this.updateProductSelection();
-                    this.setButtonsLoadingState(false);
                 })
                 .catch((error) => {
                     console.warn('⚠️ ステータス確認は失敗しましたが、商品表示は正常です:', error);
                     // ローカルストレージから選択状態を復元
                     this.restoreSelection();
                     this.updateFooter();
-                    this.setButtonsLoadingState(false);
                 });
 
             // 初期化完了後に再度フッター表示を確認
