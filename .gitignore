@@ -37,3 +37,6 @@ config.local.js
 # 画像ファイル(zipから展開されるファイルは除外)
 assets/images/illust/
 !assets/images/*.zip
+
+# QRコードなどのプライベートファイル
+lock/qrcode.png
