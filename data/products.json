@@ -5,7 +5,7 @@
       "name": "ヘアードライヤー ナノケア",
       "brand": "Panasonic",
       "category": "bath",
-      "specs": "高さ10.0×幅18.8×奥行32.9cm / EH-NA0K",
+      "specs": "高さ22.1×幅14.8×奥行7.4cm / EH-NA0K",
       "description": "高浸透ナノイーで髪の内側にうるおいを。",
       "available": true,
       "variants": [
@@ -42,6 +42,105 @@
       ],
       "defaultVariant": "pink",
       "productUrl": "https://panasonic.jp/hair/feature/NA-series/nanoe.html"
+    },
+    {
+      "id": "refa_dryer",
+      "name": "ReFa BEAUTECH DRYER S+",
+      "brand": "ReFa",
+      "category": "bath",
+      "specs": "高さ22.4×幅19.9×奥行4.2cm / RE-BC-02A",
+      "description": "乾かすほどに、髪がツヤめく。",
+      "available": true,
+      "variants": [
+        {
+          "id": "white",
+          "name": "ホワイト",
+          "color": "#e9ebea",
+          "images": [
+            "https://www.refa.net/item/refa_beautech_dryer_s_plus/images/img-product_white.jpg"
+          ],
+          "price": "34,800円",
+          "available": true
+        },
+        {
+          "id": "black",
+          "name": "ブラック",
+          "color": "#333333",
+          "images": [
+            "https://www.refa.net/item/refa_beautech_dryer_s_plus/images/img-product_black.jpg"
+          ],
+          "price": "34,800円",
+          "available": true
+        },
+        {
+          "id": "pink",
+          "name": "ピンク",
+          "color": "#f0bec8",
+          "images": [
+            "https://www.refa.net/item/refa_beautech_dryer_s_plus/images/img-product_pink.jpg"
+          ],
+          "price": "34,800円",
+          "available": true
+        }
+      ],
+      "defaultVariant": "white",
+      "productUrl": "https://www.refa.net/item/refa_beautech_dryer_s_plus/"
+    },
+    {
+      "id": "brender",
+      "name": "ハンドブレンダー",
+      "brand": "BRAUN",
+      "category": "kitchen",
+      "specs": "マルチクイック9 / MQ-9145XS",
+      "description": "泡立て、スムージー、離乳食に心強い味方。",
+      "available": true,
+      "variants": [
+        {
+          "id": "black",
+          "name": "ブラック",
+          "color": "#333333",
+          "images": [
+            "https://dam.braunhousehold.com/648x486/assets/224433"
+          ],
+          "price": "29,480円",
+          "available": true
+        }
+      ],
+      "defaultVariant": "black",
+      "productUrl": "https://www.braunhousehold.com/ja-jp/%E3%83%9E%E3%83%AB%E3%83%81%E3%82%AF%E3%82%A4%E3%83%83%E3%82%AF-9-%E3%83%8F%E3%83%B3%E3%83%89%E3%83%96%E3%83%AC%E3%83%B3%E3%83%80%E3%83%BC-mq-9145xs/p/HB901AJ-MQ9145XS"
+    },
+    {
+      "id": "range",
+      "name": "オーブンレンジ",
+      "brand": "Panasonic",
+      "category": "kitchen",
+      "specs": "高さ35.0×幅47.0×奥行39.0cm / NE-MS4C",
+      "description": "レンジ～オーブン機能でパン・お菓子まで。",
+      "available": true,
+      "variants": [
+        {
+          "id": "black",
+          "name": "ブラック",
+          "color": "#333333",
+          "images": [
+            "https://panasonicjp.scene7.com/is/image/panasonicjp/NE-MS4C-K_%E6%AD%A3%E9%9D%A2-1?fmt=png-alpha"
+          ],
+          "price": "36,080円",
+          "available": true
+        },
+        {
+          "id": "white",
+          "name": "ホワイト",
+          "color": "#e9ebea",
+          "images": [
+            "https://panasonicjp.scene7.com/is/image/panasonicjp/NE-MS4C-W_%E6%AD%A3%E9%9D%A2-1?fmt=png-alpha"
+          ],
+          "price": "36,080円",
+          "available": true
+        }
+      ],
+      "defaultVariant": "black",
+      "productUrl": "https://panasonic.jp/range/products/NE-MS4C.html"
     },
     {
       "id": "balmuda_toaster",
